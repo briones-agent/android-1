@@ -90,7 +90,13 @@ open class HomeAssistantApplication : Application() {
         Timber.plant(Timber.DebugTree())
         super.onCreate()
 
-        if (SdkVersion.isAtLeast(Build.VERSION_CODES.S) &&
+        // Disabled for the Expo brownfield fork: HAStrictMode's fail-fast
+        // detectIncorrectContextUse() aborts React Native's
+        // ReactHostImpl.createSurface(), which legitimately accesses WindowManager
+        // from the Application context — without this the RN screen renders blank.
+        @Suppress("ConstantConditionIf")
+        if (false &&
+            SdkVersion.isAtLeast(Build.VERSION_CODES.S) &&
             BuildConfig.DEBUG &&
             !BuildConfig.NO_STRICT_MODE
         ) {

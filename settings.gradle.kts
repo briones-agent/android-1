@@ -52,6 +52,9 @@ extensions.configure<org.ajoberstar.reckon.gradle.ReckonExtension>("reckon") {
 dependencyResolutionManagement {
     repositoriesMode = RepositoriesMode.FAIL_ON_PROJECT_REPOS
     repositories {
+        mavenLocal {
+            content { includeGroup("io.homeassistant.brownfield") }
+        }
         google {
             content {
                 includeGroupByRegex("com\\.android.*")

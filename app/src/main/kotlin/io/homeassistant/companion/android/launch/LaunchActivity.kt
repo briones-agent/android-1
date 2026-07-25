@@ -229,6 +229,28 @@ class LaunchActivity : AppCompatActivity() {
                 }
             }
         }
+
+        addExpoLaunchButton()
+    }
+
+    private fun addExpoLaunchButton() {
+        val content = findViewById<android.widget.FrameLayout>(android.R.id.content) ?: return
+        val button = android.widget.Button(this).apply {
+            text = "Expo"
+            contentDescription = "Open Expo React Native screen"
+            setOnClickListener {
+                startActivity(android.content.Intent(this@LaunchActivity, io.homeassistant.companion.android.ExpoActivity::class.java))
+            }
+        }
+        val margin = (16 * resources.displayMetrics.density).toInt()
+        val lp = android.widget.FrameLayout.LayoutParams(
+            android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
+            android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
+        ).apply {
+            gravity = android.view.Gravity.END or android.view.Gravity.CENTER_VERTICAL
+            marginEnd = margin
+        }
+        content.addView(button, lp)
     }
 
     override fun onStart() {

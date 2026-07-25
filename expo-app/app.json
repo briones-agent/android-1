@@ -33,7 +33,19 @@
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 76
         }
-      ]
+      ],
+      [
+        "expo-brownfield",
+        {
+          "android": {
+            "libraryName": "habrownfield",
+            "group": "io.homeassistant.brownfield",
+            "package": "io.homeassistant.brownfield",
+            "version": "1.0.0"
+          }
+        }
+      ],
+      "expo-build-properties"
     ],
     "experiments": {
       "typedRoutes": true,

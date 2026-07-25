@@ -5,6 +5,8 @@
   "dependencies": {
     "@expo/ui": "57.0.0-canary-20260723-64edab9",
     "expo": "57.0.0-canary-20260723-64edab9",
+    "expo-brownfield": "57.0.0-canary-20260723-64edab9",
+    "expo-build-properties": "57.0.0-canary-20260723-64edab9",
     "expo-constants": "57.0.0-canary-20260723-64edab9",
     "expo-device": "57.0.0-canary-20260723-64edab9",
     "expo-font": "57.0.0-canary-20260723-64edab9",

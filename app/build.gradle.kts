@@ -48,6 +48,9 @@ firebaseAppDistributionDefault {
 }
 
 dependencies {
+    // Expo brownfield: fused React Native AAR (JS bundle embedded, no Metro).
+    implementation("io.homeassistant.brownfield:habrownfield-fused-release:1.0.0")
+
     // Most of the dependencies are coming from the convention plugin to avoid duplication with `:automotive` module.
     "fullImplementation"(libs.car.projected)
     ksp(project(":provides-sensor-processor"))
