@@ -1,3 +1,56 @@
+# Home Assistant (Android) + React Native
+
+Experimental fork of [home-assistant/android](https://github.com/home-assistant/android)
+testing brownfield support for existing Android codebases. Reference for
+integrating React Native (via Expo) into an existing native app without
+refactoring the project structure.
+
+Uses Expo's brownfield **isolated** approach: the RN + Expo code is built into a
+prebuilt **AAR** and consumed like any other Maven dependency. A floating "Expo"
+button on the onboarding screen launches an `ExpoActivity` that renders the
+React Native screen (JS bundle embedded in the release AAR, so no Metro).
+
+## Integration steps
+
+1. `npx create-expo-app@latest expo-app --template default@canary` (in `./expo-app`)
+2. Build the AAR:
+   ```sh
+   cd expo-app
+   npx expo install expo-brownfield expo-build-properties
+   npx expo prebuild -p android --clean
+   npx expo-brownfield build:android --release --fused --verbose
+   ```
+   Published to local Maven as `io.homeassistant.brownfield:habrownfield-fused-release`,
+   built with `-Pbrownfield.fused.host-provided=com.caverock` (HA's `coil-svg`
+   pulls androidsvg, which `expo-image` fuses).
+3. Consume from `app/build.gradle.kts`, launch from `ExpoActivity`. Build the
+   `minimal` (no-GMS) flavor: `assembleMinimalDebug`.
+
+### Notes for reproducing the build
+
+Home Assistant is a large, strict host and needed several accommodations:
+
+- **`androidSdk-min` 23 -> 24** (`gradle/libs.versions.toml`) — React Native floor.
+- **`mavenLocal()`** (scoped) in `settings.gradle.kts` (`FAIL_ON_PROJECT_REPOS`).
+- **Gradle dependency locking** — HA pins dependencies in `app/gradle.lockfile`.
+  Regenerate after adding the AAR with `./gradlew :app:assembleMinimalDebug --write-locks`.
+- **`app/google-services.json`** — the google-services plugin is applied to all
+  flavors and fails without it; a placeholder (no real Firebase project) is
+  committed.
+- **`tools:replace="android:maxSdkVersion"`** on `WRITE_EXTERNAL_STORAGE`
+  (host 28 vs AAR 32).
+- **Disable `HAStrictMode`** in `HomeAssistantApplication` — its fail-fast
+  `detectIncorrectContextUse()` aborts React Native's `ReactHostImpl.createSurface()`
+  (which accesses WindowManager from the Application context), leaving the RN
+  screen blank.
+- `reactNativeArchitectures=arm64-v8a`. No compileSdk/Kotlin bump (compileSdk 37,
+  Kotlin 2.4).
+
+---
+
+<details>
+<summary>Home Assistant Android (original README)</summary>
+
 # Home Assistant Companion for Android
 
 [![Build Status](https://github.com/home-assistant/android/actions/workflows/onPush.yml/badge.svg)](https://github.com/home-assistant/android/actions/workflows/onPush.yml)  
@@ -65,3 +118,6 @@ It helps others discover the project and motivates us to keep improving.
 </a>
 
 [![Home Assistant - A project from the Open Home Foundation](https://www.openhomefoundation.org/badges/home-assistant.png)](https://www.openhomefoundation.org/)
+
+
+</details>
